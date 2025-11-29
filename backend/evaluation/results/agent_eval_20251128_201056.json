@@ -1,0 +1,537 @@
+{
+  "run_name": "agent_eval_20251128_201056",
+  "overall_metrics": {
+    "total_tests": 20,
+    "passed_tests": 18,
+    "failed_tests": 2,
+    "overall_accuracy": 90.0,
+    "average_score": 98.16666666666666,
+    "by_category": {
+      "exact_search": {
+        "total": 5,
+        "passed": 5,
+        "accuracy": 100.0
+      },
+      "semantic_search": {
+        "total": 12,
+        "passed": 11,
+        "accuracy": 91.66666666666666
+      },
+      "incomplete_spec": {
+        "total": 2,
+        "passed": 1,
+        "accuracy": 50.0
+      },
+      "context_memory": {
+        "total": 1,
+        "passed": 1,
+        "accuracy": 100.0
+      }
+    },
+    "timestamp": "2025-11-28T20:10:56.613840"
+  },
+  "detailed_results": [
+    {
+      "test_id": "test_001",
+      "category": "exact_search",
+      "input": "I need actuator 763A00-11330C00/A",
+      "response": "The actuator with Base Part Number 763A00-11330C00/A has the following specifications:\n\n- Voltage/Power: 220V 3 Phase Power\n- Output Torque: 300.0 Nm (2650.0 lbs)\n- Duty Cycle 54%: 70.0\n- Motor Power: 40.0 Watts\n- Operating Speed at 60Hz: 26.0 seconds\n- Operating Speed at 50Hz: 32.0 seconds\n- Cycles per Hour: 39.0\n- Starts per Hour: 1200.0\n- Full Load Current (Fla) at 60 Hz: 1.0 A\n- Full Load Current (Fla) at 50 Hz: 1.0 A\n- Locked Rotor Current (Lra) at 60 Hz: 1.2 A\n- Locked Rotor Current (Lra) at 50 Hz: 1.2 A\n\nIf you need more information or other options, please let me know!",
+      "conversation_id": "test_001",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": true,
+          "accuracy": 100.0,
+          "total_fields": 7,
+          "correct_fields": 7,
+          "details": {
+            "context_type": "correct",
+            "output_torque_nm": "correct",
+            "duty_cycle_54pct": "correct",
+            "motor_power_watts": "correct",
+            "operating_speed_sec_60_hz": "correct",
+            "cycles_per_hour_cycles": "correct",
+            "starts_per_hour_starts": "correct"
+          }
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_001"
+    },
+    {
+      "test_id": "test_002",
+      "category": "exact_search",
+      "input": "Show me specifications for 761B00-11300000/A",
+      "response": "Here are the specifications for the actuator with Base Part Number 761B00-11300000/A:\n\n- Voltage/Power: 110V Single Phase Power\n- On/Off Output Torque: 100 Nm (880 lbs.)\n- Modulating Output Torque: 70 Nm (620 lbs.)\n- On/Off Duty Cycle 54%: 40\n- Modulating Duty Cycle 54%: 40\n- Motor Power: 15 Watts\n- Operating Speed at 60Hz: 19 seconds\n- Operating Speed at 50Hz: 23 seconds\n- Cycles per Hour: 31\n- Starts per Hour: 960\n- Full Load Current (Fla) at 60 Hz: 1.3 A\n- Full Load Current (Fla) at 50 Hz: 1.2 A\n- Locked Rotor Current (Lra) at 60 Hz: 1.4 A\n- Locked Rotor Current (Lra) at 50 Hz: 1.3 A\n\nIf you need more information or specifications for other actuators, feel free to ask!",
+      "conversation_id": "test_002",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": true,
+          "accuracy": 100.0,
+          "total_fields": 5,
+          "correct_fields": 5,
+          "details": {
+            "context_type": "correct",
+            "motor_power_watts": "correct",
+            "operating_speed_sec_60_hz": "correct",
+            "cycles_per_hour_cycles": "correct",
+            "starts_per_hour_starts": "correct"
+          }
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_002"
+    },
+    {
+      "test_id": "test_003",
+      "category": "exact_search",
+      "input": "What are the specs for 764B00-11300000/A?",
+      "response": "The specifications for the actuator with Base Part Number 764B00-11300000/A are as follows:\n\n- Voltage/Power: 110V Single Phase Power\n- On/Off Output Torque: 1100 Nm (9700 lbs.)\n- Modulating Output Torque: 930 Nm (8230 lbs.)\n- On/Off Duty Cycle 54%: 25%\n- Modulating Duty Cycle 54%: 35%\n- Motor Power: 180 Watts\n- Operating Speed at 60Hz: 36 seconds\n- Operating Speed at 50Hz: 43 seconds\n- Cycles per Hour: 10\n- Starts per Hour: 840\n- Full Load Current (Fla) at 60 Hz: 6.8 A\n- Full Load Current (Fla) at 50 Hz: 6.8 A\n- Locked Rotor Current (Lra) at 60 Hz: 7.3 A\n- Locked Rotor Current (Lra) at 50 Hz: 7.4 A\n\nIf you need more information or have other questions, feel free to ask!",
+      "conversation_id": "test_003",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": true,
+          "accuracy": 100.0,
+          "total_fields": 5,
+          "correct_fields": 5,
+          "details": {
+            "context_type": "correct",
+            "motor_power_watts": "correct",
+            "operating_speed_sec_60_hz": "correct",
+            "cycles_per_hour_cycles": "correct",
+            "starts_per_hour_starts": "correct"
+          }
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_003"
+    },
+    {
+      "test_id": "test_004",
+      "category": "exact_search",
+      "input": "763A00-11300000/A",
+      "response": "The actuator with Base Part Number 763A00-11300000/A has the following specifications:\n\n- Voltage/Power: 110V Single Phase Power\n- On/Off Output Torque: 300 Nm (2650 lbs.)\n- Modulating Output Torque: 220 Nm (1950 lbs.)\n- On/Off Duty Cycle 54%: 50%\n- Modulating Duty Cycle 54%: 40%\n- Motor Power: 90 Watts\n- Operating Speed at 60Hz: 25 seconds\n- Operating Speed at 50Hz: 31 seconds\n- Cycles per Hour: 29\n- Starts per Hour: 960\n- Full Load Current (Fla) at 60 Hz: 2.6 A\n- Full Load Current (Fla) at 50 Hz: 2.5 A\n- Locked Rotor Current (Lra) at 60 Hz: 2.9 A\n- Locked Rotor Current (Lra) at 50 Hz: 3.0 A\n\nIf you need more information or other options, please let me know!",
+      "conversation_id": "test_004",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": true,
+          "accuracy": 100.0,
+          "total_fields": 5,
+          "correct_fields": 5,
+          "details": {
+            "context_type": "correct",
+            "motor_power_watts": "correct",
+            "operating_speed_sec_60_hz": "correct",
+            "cycles_per_hour_cycles": "correct",
+            "starts_per_hour_starts": "correct"
+          }
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_004"
+    },
+    {
+      "test_id": "test_005",
+      "category": "exact_search",
+      "input": "761X30-11320000/A specifications",
+      "response": "The specifications for the actuator with Base Part Number 761X30-11320000/A are as follows:\n\n- Voltage/Power: EXPLOSIONPROOF - CSA - 220V - Single Phase Power\n- On/Off Output Torque: 80 Nm (690 lbs.)\n- Modulating Output Torque: 65 Nm (550 lbs.)\n- Motor Power: 15 Watts\n- Operating Speed: 20 seconds at 60Hz, 23 seconds at 50Hz\n- Cycles per Hour: 190\n- Starts per Hour: 960\n- On Off Duty Cycle S4Pct: 40%\n- Modulating Duty Cycle S4Pct: 40%\n- Full Load Current (Fla): 0.6 A at both 60 Hz and 50 Hz\n- Locked Rotor Current (Lra): 0.7 A at both 60 Hz and 50 Hz\n\nIf you need more details or have other questions, feel free to ask!",
+      "conversation_id": "test_005",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": true,
+          "accuracy": 100.0,
+          "total_fields": 5,
+          "correct_fields": 5,
+          "details": {
+            "context_type": "correct",
+            "motor_power_watts": "correct",
+            "operating_speed_sec_60_hz": "correct",
+            "cycles_per_hour_cycles": "correct",
+            "starts_per_hour_starts": "correct"
+          }
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_005"
+    },
+    {
+      "test_id": "test_006",
+      "category": "semantic_search",
+      "input": "I need a 110V single phase actuator",
+      "response": "Here are three different 110V single phase electric actuator options with varying specifications:\n\n1. Base Part Number: 761B00-11300000/A\n   - Voltage/Power: 110V Single Phase Power\n   - On/Off Output Torque: 880 In-Lbs (100 Nm)\n   - Duty Cycle (On/Off): 40% at 54%\n   - Cycles Per Hour: 31\n   - Modulating Output Torque: 620 In-Lbs (70 Nm)\n   - Motor Power: 15 Watts\n   - Operating Speed: 19 sec (60 Hz), 23 sec (50 Hz)\n   - Starts Per Hour: 960\n\n2. Base Part Number: 763A00-11300000/A\n   - Voltage/Power: 110V Single Phase Power\n   - On/Off Output Torque: 2650 In-Lbs (300 Nm)\n   - Duty Cycle (On/Off): 50% at 54%\n   - Cycles Per Hour: 29\n   - Modulating Output Torque: 1950 In-Lbs (220 Nm)\n   - Motor Power: 90 Watts\n   - Operating Speed: 25 sec (60 Hz), 31 sec (50 Hz)\n   - Starts Per Hour: 960\n\n3. Base Part Number: 764B00-11300000/A\n   - Voltage/Power: 110V Single Phase Power\n   - On/Off Output Torque: 9700 In-Lbs (1100 Nm)\n   - Duty Cycle (On/Off): 25% at 54%\n   - Cycles Per Hour: 10\n   - Modulating Output Torque: 8230 In-Lbs (930 Nm)\n   - Motor Power: 180 Watts\n   - Operating Speed: 36 sec (60 Hz), 43 sec (50 Hz)\n   - Starts Per Hour: 840\n\nIf you want more options or details on any specific model, please let me know!",
+      "conversation_id": "test_006",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_006"
+    },
+    {
+      "test_id": "test_007",
+      "category": "semantic_search",
+      "input": "Show me 220V three phase actuators",
+      "response": "Here are 3 different options for 220V three phase actuators with varying specifications:\n\n1. Base Part Number: 763C00-11330C00/A  \n   - Voltage/Power: 220V 3 Phase Power  \n   - Output Torque: 5300 In-Lbs. (600 Nm)  \n   - Duty Cycle: 70%  \n   - Cycles per Hour: 32  \n   - Starts per Hour: 1200  \n   - Operating Speed: 32 sec (60 Hz), 39 sec (50 Hz)  \n   - Motor Power: 90 Watts  \n   - Full Load Current: 2.0 A (60 Hz & 50 Hz)  \n   - Locked Rotor Current: 2.4 A (60 Hz & 50 Hz)  \n\n2. Base Part Number: 763A00-11330C00/A  \n   - Voltage/Power: 220V 3 Phase Power  \n   - Output Torque: 2650 In-Lbs. (300 Nm)  \n   - Duty Cycle: 70%  \n   - Cycles per Hour: 39  \n   - Starts per Hour: 1200  \n   - Operating Speed: 26 sec (60 Hz), 32 sec (50 Hz)  \n   - Motor Power: 40 Watts  \n   - Full Load Current: 1.0 A (60 Hz & 50 Hz)  \n   - Locked Rotor Current: 1.2 A (60 Hz & 50 Hz)  \n\n3. Base Part Number: 764A00-11330C00/A  \n   - Voltage/Power: 220V 3 Phase Power  \n   - Output Torque: 7080 In-Lbs. (800 Nm)  \n   - Duty Cycle: 70%  \n   - Cycles per Hour: 36  \n   - Starts per Hour: 1200  \n   - Operating Speed: 29 sec (60 Hz), 35 sec (50 Hz)  \n   - Motor Power: 180 Watts  \n   - Full Load Current: 3.4 A (60 Hz & 50 Hz)  \n   - Locked Rotor Current: 4.0 A (60 Hz & 50 Hz)  \n\nIf you want more options or details on any specific model, let me know!",
+      "conversation_id": "test_007",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_007"
+    },
+    {
+      "test_id": "test_008",
+      "category": "semantic_search",
+      "input": "I need high torque actuator",
+      "response": "Here are some high torque actuator options:\n\n1. Base Part Number: 763X30-11370000/A\n   - Voltage/Power: 24V DC Power - Modulating\n   - Modulating Output Torque: 1900 In-Lbs. (220 Nm)\n   - Duty Cycle: 35% (S4)\n   - Starts per Hour: 840\n   - Operating Speed: 32 seconds\n   - Motor Power: 40 Watts\n\n2. Base Part Number: 764B00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 9700 In-Lbs. (1100 Nm)\n   - Duty Cycle: 25% (54%)\n   - Cycles per Hour: 10\n   - Operating Speed: 36 seconds (60 Hz)\n   - Motor Power: 180 Watts\n\n3. Base Part Number: 764A00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 6650 In-Lbs. (750 Nm)\n   - Duty Cycle: 25% (54%)\n   - Cycles per Hour: 13\n   - Operating Speed: 27 seconds (60 Hz)\n   - Motor Power: 180 Watts\n\nPlease let me know if you have a preferred voltage or other specifications to narrow down the options.",
+      "conversation_id": "test_008",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_008"
+    },
+    {
+      "test_id": "test_009",
+      "category": "semantic_search",
+      "input": "Recommend actuator with fast operating speed",
+      "response": "Here are some actuators with fast operating speeds from our database:\n\n1. Base Part Number: 761A00-11320000/A  \n   - Voltage/Power: 220V Single Phase Power  \n   - Operating Speed: 17 sec (60 Hz), 20 sec (50 Hz)  \n   - On/Off Output Torque: 700 In-Lbs (80 Nm)  \n   - Duty Cycle: 40%  \n   - Cycles Per Hour: 36  \n   - Starts Per Hour: 960  \n   - Motor Power: 15 Watts  \n\n2. Base Part Number: 762X30-11370000/A  \n   - Voltage/Power: 24V DC Power - Modulating  \n   - Operating Speed: 22 sec  \n   - Modulating Output Torque: 1150 In-Lbs (130 Nm)  \n   - Duty Cycle: 40%  \n   - Starts Per Hour: 960  \n   - Motor Power: 40 Watts  \n\n3. Base Part Number: 764A00-11320000/A  \n   - Voltage/Power: 220V Single Phase Power  \n   - Operating Speed: 27 sec (60 Hz), 33 sec (50 Hz)  \n   - On/Off Output Torque: 6650 In-Lbs (750 Nm)  \n   - Duty Cycle: 25%  \n   - Cycles Per Hour: 13  \n   - Starts Per Hour: 840  \n   - Motor Power: 180 Watts  \n\nIf you have a preferred voltage or other specifications, I can help narrow down the options further.",
+      "conversation_id": "test_009",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_009"
+    },
+    {
+      "test_id": "test_010",
+      "category": "incomplete_spec",
+      "input": "I want a single phase actuator",
+      "response": "You asked for a single phase actuator. I found several options with different voltage/power types for single phase actuators:\n\n- 110V Single Phase Power\n- 220V Single Phase Power\n\nCould you please specify which voltage you need? Based on that, I can provide you with detailed actuator options.",
+      "conversation_id": "test_010",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_010"
+    },
+    {
+      "test_id": "test_011",
+      "category": "incomplete_spec",
+      "input": "Show me three phase actuators",
+      "response": "Here are three different three-phase actuators with 220V 3 Phase Power from our database:\n\n1. Base Part Number: 763C00-11330C00/A\n   - Voltage/Power: 220V 3 Phase Power\n   - Output Torque: 5300 In-Lbs. (600 Nm)\n   - Duty Cycle: 70%\n   - Cycles per Hour: 32\n   - Starts per Hour: 1200\n   - Operating Speed: 32 sec (60 Hz), 39 sec (50 Hz)\n   - Motor Power: 90 Watts\n   - Full Load Current: 2.0 A (60 Hz & 50 Hz)\n   - Locked Rotor Current: 2.4 A (60 Hz & 50 Hz)\n\n2. Base Part Number: 763B00-11330C00/A\n   - Voltage/Power: 220V 3 Phase Power\n   - Output Torque: 4400 In-Lbs. (500 Nm)\n   - Duty Cycle: 70%\n   - Cycles per Hour: 39\n   - Starts per Hour: 1200\n   - Operating Speed: 26 sec (60 Hz), 32 sec (50 Hz)\n   - Motor Power: 90 Watts\n   - Full Load Current: 2.0 A (60 Hz & 50 Hz)\n   - Locked Rotor Current: 2.4 A (60 Hz & 50 Hz)\n\n3. Base Part Number: 763A00-11330C00/A\n   - Voltage/Power: 220V 3 Phase Power\n   - Output Torque: 2650 In-Lbs. (300 Nm)\n   - Duty Cycle: 70%\n   - Cycles per Hour: 39\n   - Starts per Hour: 1200\n   - Operating Speed: 26 sec (60 Hz), 32 sec (50 Hz)\n   - Motor Power: 40 Watts\n   - Full Load Current: 1.0 A (60 Hz & 50 Hz)\n   - Locked Rotor Current: 1.2 A (60 Hz & 50 Hz)\n\nIf you want more options or details on any specific model, please let me know!",
+      "conversation_id": "test_011",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": false,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 83.33333333333334,
+      "passed": false,
+      "langfuse_trace_id": "test_011"
+    },
+    {
+      "test_id": "test_012",
+      "category": "semantic_search",
+      "input": "I need 24V DC actuator",
+      "response": "Here are some 24V DC actuator options from our database with different specifications:\n\n1. Base Part Number: 763X30-11370000/A\n   - Voltage/Power: 24V DC Power - Modulating\n   - Output Torque: 1900 In-Lbs. (220 Nm)\n   - Duty Cycle: 35% (S4)\n   - Starts per Hour: 840\n   - Operating Speed: 32 seconds\n   - Motor Power: 40 Watts\n   - Full Load Current: 8.9 Amps\n\n2. Base Part Number: 762X30-11370000/A\n   - Voltage/Power: 24V DC Power - Modulating\n   - Output Torque: 1150 In-Lbs. (130 Nm)\n   - Duty Cycle: 40% (S4)\n   - Starts per Hour: 960\n   - Operating Speed: 22 seconds\n   - Motor Power: 40 Watts\n   - Full Load Current: 6.0 Amps\n\n3. Base Part Number: 762Y30-11370000/A\n   - Voltage/Power: 24V DC Power - Modulating\n   - Output Torque: 1270 In-Lbs. (145 Nm)\n   - Duty Cycle: 40% (S4)\n   - Starts per Hour: 960\n   - Operating Speed: 22 seconds\n   - Motor Power: 40 Watts\n   - Full Load Current: 7.4 Amps\n\nIf you want actuators with on/off control or AC/DC power, I can provide those options as well. Let me know if you want more details or other specifications.",
+      "conversation_id": "test_012",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_012"
+    },
+    {
+      "test_id": "test_013",
+      "category": "semantic_search",
+      "input": "Actuator with duty cycle above 50%",
+      "response": "I found some actuators with duty cycles around or above 50%, here are a few options:\n\n1. Base Part Number: 762A00-11300000/A\n   - Voltage/Power: 110V Single Phase Power\n   - On/Off Output Torque: 1330 In-Lbs. (150 Nm)\n   - On/Off Duty Cycle: 50%\n   - Cycles Per Hour: 42\n   - Modulating Output Torque: 1150 In-Lbs. (130 Nm)\n   - Modulating Duty Cycle: 40%\n   - Operating Speed: 18 sec (60 Hz), 21 sec (50 Hz)\n   - Motor Power: 40 Watts\n\n2. Base Part Number: 761B00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 880 In-Lbs. (100 Nm)\n   - On/Off Duty Cycle: 40%\n   - Cycles Per Hour: 31\n   - Modulating Output Torque: 620 In-Lbs. (70 Nm)\n   - Modulating Duty Cycle: 40%\n   - Operating Speed: 19 sec (60 Hz), 23 sec (50 Hz)\n   - Motor Power: 15 Watts\n\nThe other actuators found have duty cycles below 50%.\n\nWould you like more options or details on any specific voltage or torque range?",
+      "conversation_id": "test_013",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": false,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 80.0,
+      "passed": false,
+      "langfuse_trace_id": "test_013"
+    },
+    {
+      "test_id": "test_014",
+      "category": "semantic_search",
+      "input": "Low power consumption actuator",
+      "response": "Here are some low power consumption actuators from the database, all with motor power around 40 Watts and low full load current:\n\n1. Base Part Number: 762X30-11370000/A\n   - Voltage/Power: 24V DC Power - Modulating\n   - Output Torque: 1150 In-Lbs. (130 Nm)\n   - Duty Cycle: 40% (S4)\n   - Operating Speed: 22 seconds\n   - Full Load Current: 6.0 Amps\n   - Motor Power: 40 Watts\n   - Starts per Hour: 960\n\n2. Base Part Number: 763X30-11370000/A\n   - Voltage/Power: 24V DC Power - Modulating\n   - Output Torque: 1900 In-Lbs. (220 Nm)\n   - Duty Cycle: 35% (S4)\n   - Operating Speed: 32 seconds\n   - Full Load Current: 8.9 Amps\n   - Motor Power: 40 Watts\n   - Starts per Hour: 840\n\n3. Base Part Number: 762Y30-11370000/A\n   - Voltage/Power: 24V DC Power - Modulating\n   - Output Torque: 1270 In-Lbs. (145 Nm)\n   - Duty Cycle: 40% (S4)\n   - Operating Speed: 22 seconds\n   - Full Load Current: 7.4 Amps\n   - Motor Power: 40 Watts\n   - Starts per Hour: 960\n\nIf you want options with different voltages or other specifications, please let me know!",
+      "conversation_id": "test_014",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_014"
+    },
+    {
+      "test_id": "test_015",
+      "category": "semantic_search",
+      "input": "Explosionproof actuator CSA certified",
+      "response": "I found several explosionproof actuators that are CSA certified. Here are some options with different specifications and voltages:\n\n1. Base Part Number: 762X30-11300000/A\n   - Voltage/Power: EXPLOSIONPROOF - CSA - 110V - Single Phase Power\n   - On/Off Output Torque: 1350 In-Lbs (150 Nm)\n   - Duty Cycle (On/Off): 70% S4\n   - Cycles per Hour: 100\n   - Motor Power: 40 Watts\n   - Operating Speed: 21 sec (60 Hz), 25 sec (50 Hz)\n\n2. Base Part Number: 762X30-11320000/A\n   - Voltage/Power: EXPLOSIONPROOF - CSA - 220V - Single Phase Power\n   - On/Off Output Torque: 1350 In-Lbs (150 Nm)\n   - Duty Cycle (On/Off): 35% S4\n   - Cycles per Hour: 180\n   - Motor Power: 40 Watts\n   - Operating Speed: 23 sec (60 Hz), 28 sec (50 Hz)\n\n3. Base Part Number: 765X30-11300000/A\n   - Voltage/Power: EXPLOSIONPROOF - CSA - 110V - Single Phase Power\n   - On/Off Output Torque: 17500 In-Lbs (2000 Nm)\n   - Duty Cycle (On/Off): 30% S4\n   - Cycles per Hour: 50\n   - Motor Power: 180 Watts\n   - Operating Speed: 93 sec (60 Hz), 112 sec (50 Hz)\n\nIf you have a preferred voltage or other specific requirements, please let me know!",
+      "conversation_id": "test_015",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_015"
+    },
+    {
+      "test_id": "test_016",
+      "category": "semantic_search",
+      "input": "Modulating actuator with 220V",
+      "response": "I found several modulating actuators with 220V power. Here are three options with different specifications:\n\n1. Base Part Number: 763A00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - Modulating Output Torque: 1950 In-Lbs. (220 Nm)\n   - Duty Cycle: 54% (Modulating)\n   - Starts per Hour: 960\n   - Operating Speed: 24 sec (60 Hz), 29 sec (50 Hz)\n   - Full Load Current: 1.3 A\n   - Locked Rotor Current: 1.4-1.5 A\n   - Motor Power: 90 Watts\n\n2. Base Part Number: 761B00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - Modulating Output Torque: 620 In-Lbs. (70 Nm)\n   - Duty Cycle: 54% (Modulating)\n   - Starts per Hour: 960\n   - Operating Speed: 19 sec (60 Hz), 23 sec (50 Hz)\n   - Full Load Current: 0.7 A\n   - Locked Rotor Current: 0.7 A\n   - Motor Power: 15 Watts\n\n3. Base Part Number: 761A00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - Modulating Output Torque: 580 In-Lbs. (65 Nm)\n   - Duty Cycle: 54% (Modulating)\n   - Starts per Hour: 960\n   - Operating Speed: 17 sec (60 Hz), 20 sec (50 Hz)\n   - Full Load Current: 0.7 A\n   - Locked Rotor Current: 0.7 A\n   - Motor Power: 15 Watts\n\nIf you want more details or other options, please let me know!",
+      "conversation_id": "test_016",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_016"
+    },
+    {
+      "test_id": "test_017",
+      "category": "semantic_search",
+      "input": "Actuator with operating speed under 30 seconds",
+      "response": "Here are some actuators with operating speeds under 30 seconds, all with 220V Single Phase Power:\n\n1. Base Part Number: 762A00-11320000/A\n   - Operating Speed: 18 sec (60 Hz), 21 sec (50 Hz)\n   - On/Off Output Torque: 1330 In-Lbs (150 Nm)\n   - Duty Cycle: 54%\n   - Cycles Per Hour: 30\n   - Motor Power: 40 Watts\n\n2. Base Part Number: 761A00-11320000/A\n   - Operating Speed: 17 sec (60 Hz), 20 sec (50 Hz)\n   - On/Off Output Torque: 700 In-Lbs (80 Nm)\n   - Duty Cycle: 54%\n   - Cycles Per Hour: 36\n   - Motor Power: 15 Watts\n\n3. Base Part Number: 763A00-11320000/A\n   - Operating Speed: 24 sec (60 Hz), 29 sec (50 Hz)\n   - On/Off Output Torque: 2650 In-Lbs (300 Nm)\n   - Duty Cycle: 54%\n   - Cycles Per Hour: 24\n   - Motor Power: 90 Watts\n\n4. Base Part Number: 763C00-11320000/A\n   - Operating Speed: 28 sec (60 Hz), 34 sec (50 Hz)\n   - On/Off Output Torque: 4800 In-Lbs (550 Nm)\n   - Duty Cycle: 25%\n   - Cycles Per Hour: 13\n   - Motor Power: 90 Watts\n\nNote: One actuator (766A00-11320000/A*) has an operating speed slightly above 30 seconds, so it is not included here.\n\nIf you want more options or actuators with different voltage or phase, please let me know!",
+      "conversation_id": "test_017",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_017"
+    },
+    {
+      "test_id": "test_018",
+      "category": "context_memory",
+      "input": "single phase",
+      "response": "You asked about \"single phase\" actuators. Based on the database search, I found several voltage/power options for single phase actuators:\n\n- 110V Single Phase Power\n- 220V Single Phase Power\n\nPlease specify which voltage you need for the single phase actuator, so I can provide you with detailed options and specifications.",
+      "conversation_id": "test_018",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_018"
+    },
+    {
+      "test_id": "test_019",
+      "category": "semantic_search",
+      "input": "High cycles per hour actuator",
+      "response": "I found several high cycles per hour actuators with different specifications. Here are some options:\n\n1. Base Part Number: 763C00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 4800 In-Lbs. (550 Nm)\n   - Duty Cycle (On/Off): 54% (25)\n   - Cycles Per Hour: 13\n   - Starts Per Hour: 960\n   - Motor Power: 90 Watts\n   - Operating Speed: 28 sec (60 Hz), 34 sec (50 Hz)\n\n2. Base Part Number: 763C00-11300000/A\n   - Voltage/Power: 110V Single Phase Power\n   - On/Off Output Torque: 4800 In-Lbs. (550 Nm)\n   - Duty Cycle (On/Off): 54% (30)\n   - Cycles Per Hour: 13\n   - Starts Per Hour: 960\n   - Motor Power: 90 Watts\n   - Operating Speed: 33 sec (60 Hz), 39 sec (50 Hz)\n\n3. Base Part Number: 761A00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 700 In-Lbs. (80 Nm)\n   - Duty Cycle (On/Off): 54% (40)\n   - Cycles Per Hour: 36\n   - Starts Per Hour: 960\n   - Motor Power: 15 Watts\n   - Operating Speed: 17 sec (60 Hz), 20 sec (50 Hz)\n\nIf you want, I can provide more options or details on any of these. Also, if you have a preferred voltage or other specifications, please let me know!",
+      "conversation_id": "test_019",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_019"
+    },
+    {
+      "test_id": "test_020",
+      "category": "semantic_search",
+      "input": "Recommend 3 different actuators for industrial use with 220V",
+      "response": "Here are 3 different actuators suitable for industrial use with 220V Single Phase Power:\n\n1. Base Part Number: 764A00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 6650 In-Lbs. (750 Nm)\n   - On/Off Duty Cycle: 25% (54%)\n   - Cycles Per Hour: 13\n   - Modulating Output Torque: 6020 In-Lbs. (680 Nm)\n   - Modulating Duty Cycle: 35% (54%)\n   - Starts Per Hour: 840\n   - Operating Speed: 27 sec (60 Hz), 33 sec (50 Hz)\n   - Motor Power: 180 Watts\n\n2. Base Part Number: 762B00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 1750 In-Lbs. (200 Nm)\n   - On/Off Duty Cycle: 35% (54%)\n   - Cycles Per Hour: 21\n   - Modulating Output Torque: 1330 In-Lbs. (150 Nm)\n   - Modulating Duty Cycle: 40% (54%)\n   - Starts Per Hour: 960\n   - Operating Speed: 24 sec (60 Hz), 29 sec (50 Hz)\n   - Motor Power: 40 Watts\n\n3. Base Part Number: 764B00-11320000/A\n   - Voltage/Power: 220V Single Phase Power\n   - On/Off Output Torque: 9700 In-Lbs. (1100 Nm)\n   - On/Off Duty Cycle: 25% (54%)\n   - Cycles Per Hour: 10\n   - Modulating Output Torque: 7080 In-Lbs. (800 Nm)\n   - Modulating Duty Cycle: 35% (54%)\n   - Starts Per Hour: 840\n   - Operating Speed: 36 sec (60 Hz), 43 sec (50 Hz)\n   - Motor Power: 180 Watts\n\nLet me know if you want more options or details on any of these!",
+      "conversation_id": "test_020",
+      "metrics": {
+        "tool_usage_correct": true,
+        "expected_fields_present": true,
+        "part_number_correct": true,
+        "context_type_correct": true,
+        "min_results_satisfied": true,
+        "clarification_asked": true,
+        "ground_truth": {
+          "checked": false,
+          "accuracy": 100,
+          "details": {}
+        }
+      },
+      "score": 100.0,
+      "passed": true,
+      "langfuse_trace_id": "test_020"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+# Docker Compose optimizado para DESARROLLO
+
+services:
+  # Backend FastAPI para desarrollo
+  backend:
+    build:
+      context: ./backend
+      dockerfile: backend.Dockerfile
+    container_name: konecto-backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+      - /app/.pytest_cache
+      - /app/.mypy_cache
+      - ./backend/data:/app/data
+      - ./backend/logs:/app/logs
+    depends_on: []
+    networks:
+      - konecto-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stdin_open: true
+    tty: true
+
+  # Frontend Next.js para desarrollo
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: konecto-frontend
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+      - ./frontend/logs:/app/logs
+    depends_on:
+      - backend
+    networks:
+      - konecto-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stdin_open: true
+    tty: true
+
+# Custom network for development
+networks:
+  konecto-network:
+    driver: bridge
+
+volumes: {}

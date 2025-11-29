@@ -1,0 +1,225 @@
+{
+  "test_cases": [
+    {
+      "id": "test_001",
+      "category": "exact_search",
+      "input": "I need actuator 763A00-11330C00/A",
+      "expected_tool": "search_by_part_number",
+      "expected_part_number": "763A00-11330C00/A",
+      "ground_truth": {
+        "base_part_number": "763A00-11330C00/A",
+        "context_type": "220V 3 Phase Power",
+        "output_torque_nm": 300.0,
+        "duty_cycle_54pct": 70.0,
+        "motor_power_watts": 40.0,
+        "operating_speed_sec_60_hz": 26.0,
+        "cycles_per_hour_cycles": 39.0,
+        "starts_per_hour_starts": 1200.0
+      },
+      "description": "Exact part number search with full spec verification"
+    },
+    {
+      "id": "test_002",
+      "category": "exact_search",
+      "input": "Show me specifications for 761B00-11300000/A",
+      "expected_tool": "search_by_part_number",
+      "expected_part_number": "761B00-11300000/A",
+      "ground_truth": {
+        "base_part_number": "761B00-11300000/A",
+        "context_type": "110V Single Phase Power",
+        "motor_power_watts": 15,
+        "operating_speed_sec_60_hz": 19,
+        "cycles_per_hour_cycles": 31,
+        "starts_per_hour_starts": 960
+      },
+      "description": "Exact part number search - 110V single phase"
+    },
+    {
+      "id": "test_003",
+      "category": "exact_search",
+      "input": "What are the specs for 764B00-11300000/A?",
+      "expected_tool": "search_by_part_number",
+      "expected_part_number": "764B00-11300000/A",
+      "ground_truth": {
+        "base_part_number": "764B00-11300000/A",
+        "context_type": "110V Single Phase Power",
+        "motor_power_watts": 180,
+        "operating_speed_sec_60_hz": 36,
+        "cycles_per_hour_cycles": 10,
+        "starts_per_hour_starts": 840
+      },
+      "description": "Part number with question format"
+    },
+    {
+      "id": "test_004",
+      "category": "exact_search",
+      "input": "763A00-11300000/A",
+      "expected_tool": "search_by_part_number",
+      "expected_part_number": "763A00-11300000/A",
+      "ground_truth": {
+        "base_part_number": "763A00-11300000/A",
+        "context_type": "110V Single Phase Power",
+        "motor_power_watts": 90,
+        "operating_speed_sec_60_hz": 25,
+        "cycles_per_hour_cycles": 29,
+        "starts_per_hour_starts": 960
+      },
+      "description": "Part number only - no additional text"
+    },
+    {
+      "id": "test_005",
+      "category": "exact_search",
+      "input": "761X30-11320000/A specifications",
+      "expected_tool": "search_by_part_number",
+      "expected_part_number": "761X30-11320000/A",
+      "ground_truth": {
+        "base_part_number": "761X30-11320000/A",
+        "context_type": "EXPLOSIONPROOF - CSA - 220V - Single Phase Power",
+        "motor_power_watts": 15,
+        "operating_speed_sec_60_hz": 20,
+        "cycles_per_hour_cycles": 190,
+        "starts_per_hour_starts": 960
+      },
+      "description": "Explosionproof part number"
+    },
+    {
+      "id": "test_006",
+      "category": "semantic_search",
+      "input": "I need a 110V single phase actuator",
+      "expected_tool": "semantic_search",
+      "expected_context_type_contains": "110V",
+      "min_results": 3,
+      "max_results": 3,
+      "description": "Complete specification - voltage and phase"
+    },
+    {
+      "id": "test_007",
+      "category": "semantic_search",
+      "input": "Show me 220V three phase actuators",
+      "expected_tool": "semantic_search",
+      "expected_context_type_contains": "220V",
+      "min_results": 3,
+      "description": "Complete specification - 220V three phase"
+    },
+    {
+      "id": "test_008",
+      "category": "semantic_search",
+      "input": "I need high torque actuator",
+      "expected_tool": "semantic_search",
+      "min_results": 3,
+      "validate_high_torque": true,
+      "description": "Vague query - high torque"
+    },
+    {
+      "id": "test_009",
+      "category": "semantic_search",
+      "input": "Recommend actuator with fast operating speed",
+      "expected_tool": "semantic_search",
+      "min_results": 3,
+      "validate_fast_speed": true,
+      "description": "Vague query - fast speed"
+    },
+    {
+      "id": "test_010",
+      "category": "incomplete_spec",
+      "input": "I want a single phase actuator",
+      "expected_tool": "semantic_search",
+      "should_ask_clarification": true,
+      "clarification_about": "voltage",
+      "description": "Incomplete spec - missing voltage"
+    },
+    {
+      "id": "test_011",
+      "category": "incomplete_spec",
+      "input": "Show me three phase actuators",
+      "expected_tool": "semantic_search",
+      "should_ask_clarification": true,
+      "clarification_about": "voltage",
+      "description": "Incomplete spec - missing voltage"
+    },
+    {
+      "id": "test_012",
+      "category": "semantic_search",
+      "input": "I need 24V DC actuator",
+      "expected_tool": "semantic_search",
+      "expected_context_type_contains": "24V",
+      "min_results": 1,
+      "description": "DC power actuator"
+    },
+    {
+      "id": "test_013",
+      "category": "semantic_search",
+      "input": "Actuator with duty cycle above 50%",
+      "expected_tool": "semantic_search",
+      "min_results": 3,
+      "validate_duty_cycle_min": 50,
+      "description": "Specific duty cycle requirement"
+    },
+    {
+      "id": "test_014",
+      "category": "semantic_search",
+      "input": "Low power consumption actuator",
+      "expected_tool": "semantic_search",
+      "min_results": 3,
+      "validate_low_power": true,
+      "description": "Power consumption requirement"
+    },
+    {
+      "id": "test_015",
+      "category": "semantic_search",
+      "input": "Explosionproof actuator CSA certified",
+      "expected_tool": "semantic_search",
+      "expected_context_type_contains": "EXPLOSIONPROOF",
+      "min_results": 1,
+      "description": "Certification requirement"
+    },
+    {
+      "id": "test_016",
+      "category": "semantic_search",
+      "input": "Modulating actuator with 220V",
+      "expected_tool": "semantic_search",
+      "expected_context_type_contains": "220V",
+      "min_results": 1,
+      "description": "Modulating type with voltage"
+    },
+    {
+      "id": "test_017",
+      "category": "semantic_search",
+      "input": "Actuator with operating speed under 30 seconds",
+      "expected_tool": "semantic_search",
+      "min_results": 3,
+      "validate_max_speed": 30,
+      "description": "Speed requirement"
+    },
+    {
+      "id": "test_018",
+      "category": "context_memory",
+      "input": "single phase",
+      "follow_up": "110V",
+      "expected_tool": "semantic_search",
+      "should_combine_context": true,
+      "expected_context_type_contains": "110V",
+      "min_results": 3,
+      "description": "Context memory - combine phase and voltage"
+    },
+    {
+      "id": "test_019",
+      "category": "semantic_search",
+      "input": "High cycles per hour actuator",
+      "expected_tool": "semantic_search",
+      "min_results": 3,
+      "validate_high_cycles": true,
+      "description": "Cycles per hour requirement"
+    },
+    {
+      "id": "test_020",
+      "category": "semantic_search",
+      "input": "Recommend 3 different actuators for industrial use with 220V",
+      "expected_tool": "semantic_search",
+      "expected_context_type_contains": "220V",
+      "min_results": 3,
+      "max_results": 3,
+      "description": "Multiple recommendations with voltage"
+    }
+  ]
+}
