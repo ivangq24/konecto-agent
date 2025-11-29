@@ -49,9 +49,9 @@ RUN mkdir -p /app/data/raw \
 
 # Copiar código de la aplicación
 COPY app/ ./app/
-COPY build_vector_db.py .
-COPY build_sqlite_db.py .
-COPY ingest.py .
+COPY scripts/build_vector_db.py .
+COPY scripts/build_sqlite_db.py .
+COPY scripts/ingest.py .
 
 # Exponer puerto
 EXPOSE 8000

@@ -70,17 +70,9 @@ cd ..
 cd frontend
 cp .env.example .env
 # Ensure NEXT_PUBLIC_API_URL points to the backend service
-# NEXT_PUBLIC_API_URL="http://backend:8000"
+# For browser access, use localhost (not backend hostname):
+# NEXT_PUBLIC_API_URL="http://localhost:8000"
 cd ..
-```
-
-### 3. Prepare data directories
-
-Ensure the raw data directory exists and place your PDF file there:
-
-```bash
-mkdir -p backend/data/raw
-# Copy 'series_76_electric_data.pdf' (or similar) to backend/data/raw/
 ```
 
 ## How to Run

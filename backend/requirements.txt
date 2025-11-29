@@ -9,7 +9,7 @@ pydantic-settings>=2.0.0
 # LangChain
 langchain>=0.3.0
 langchain-core>=0.3.0
-langchain-openai>=0.2.0
+langchain-openai>=0.3.0  # Cambiar de >=0.2.0 a >=0.3.0 o superior
 langchain-community>=0.3.0
 langchain-classic>=0.1.0
 
@@ -22,7 +22,7 @@ pandas>=2.0.0
 python-dotenv>=1.0.0
 
 # OpenAI
-openai>=1.0.0
+openai>=1.54.0
 
 # Google Generative AI (for PDF processing)
 google-generativeai>=0.3.0

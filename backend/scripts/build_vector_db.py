@@ -179,7 +179,10 @@ def create_chunks_from_dataframe(df: pd.DataFrame, source_table: str) -> List[Do
 
     chunks = []
 
-    for idx, row in df.iterrows():
+    # Reset index to ensure numeric indices, or use enumerate
+    df_reset = df.reset_index(drop=True)
+    
+    for row_idx, (idx, row) in enumerate(df_reset.iterrows()):
         # Skip completely empty rows
         if row.isna().all():
             continue
@@ -193,7 +196,7 @@ def create_chunks_from_dataframe(df: pd.DataFrame, source_table: str) -> List[Do
 
         # Create metadata
         metadata = create_metadata(row, source_table)
-        metadata["row_index"] = int(idx)
+        metadata["row_index"] = row_idx  # Use enumerate index instead
 
         # Create Document
         doc = Document(page_content=text, metadata=metadata)
@@ -259,7 +262,7 @@ def process_csv_files(csv_directory: str, settings) -> List[Document]:
     return all_chunks
 
 
-def create_embeddings_and_store(chunks: List[Document], settings):
+def create_embeddings_and_store(chunks: List[Document], settings, chroma_path: str):
     """
     Creates embeddings and stores them in ChromaDB.
     
@@ -272,7 +275,7 @@ def create_embeddings_and_store(chunks: List[Document], settings):
         settings: Application settings object containing:
             - openai_api_key: OpenAI API key
             - openai_embedding_model: Embedding model name
-            - chroma_persist_directory: Path for ChromaDB storage
+        chroma_path: Resolved absolute path for ChromaDB storage
             
     Returns:
         Chroma vectorstore object, or None if no chunks provided
@@ -299,27 +302,27 @@ def create_embeddings_and_store(chunks: List[Document], settings):
         )
 
         # Create directory if it doesn't exist
-        os.makedirs(settings.chroma_persist_directory, exist_ok=True)
+        os.makedirs(chroma_path, exist_ok=True)
 
-        # Clean existing directory if it exists (optional, comment if you want to append)
-        if os.path.exists(settings.chroma_persist_directory):
+        # Clean existing directory if it exists
+        if os.path.exists(chroma_path):
             import shutil
-            print(f"   Cleaning existing directory: {settings.chroma_persist_directory}")
-            shutil.rmtree(settings.chroma_persist_directory)
+            print(f"   Cleaning existing directory: {chroma_path}")
+            shutil.rmtree(chroma_path)
 
         # Create vectorstore
-        print(f"   Creating vectorstore in: {settings.chroma_persist_directory}")
+        print(f"   Creating vectorstore in: {chroma_path}")
         vectorstore = Chroma.from_documents(
             documents=chunks,
             embedding=embeddings,
-            persist_directory=settings.chroma_persist_directory,
+            persist_directory=chroma_path,
         )
 
         # ChromaDB persists automatically, but we can force a flush
         # In recent versions, persist() is no longer necessary
 
         print(f"   Embeddings stored successfully!")
-        print(f"   Location: {settings.chroma_persist_directory}")
+        print(f"   Location: {chroma_path}")
 
         # Show statistics
         print(f"\nStatistics:")
@@ -384,6 +387,11 @@ def main():
         print(f"ERROR: Directory not found: {processed_dir}")
         return 1
 
+    # Resolve chroma_persist_directory (can be relative or absolute)
+    chroma_persist_dir = Path(settings.chroma_persist_directory)
+    if not chroma_persist_dir.is_absolute():
+        chroma_persist_dir = (backend_dir / chroma_persist_dir).resolve()
+
     # Process all CSVs
     chunks = process_csv_files(str(processed_dir), settings)
 
@@ -393,7 +401,7 @@ def main():
 
     # Create embeddings and store
     try:
-        vectorstore = create_embeddings_and_store(chunks, settings)
+        vectorstore = create_embeddings_and_store(chunks, settings, str(chroma_persist_dir))
         
         if vectorstore:
             print("\n" + "=" * 60)
