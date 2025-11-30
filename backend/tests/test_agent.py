@@ -41,7 +41,7 @@ class TestActuatorAgent:
         mock_data_service.search_by_part_number.return_value = [sample_actuator_data]
         
         # Mock agent executor
-        mock_executor = AsyncMock()
+        mock_executor = MagicMock()
         mock_executor.invoke.return_value = {
             "output": "The actuator 763A00-11330C00/A has the following specifications...",
         }
@@ -71,7 +71,7 @@ class TestActuatorAgent:
         """Test processing a message that triggers semantic search"""
         mock_data_service.semantic_search.return_value = []
         
-        mock_executor = AsyncMock()
+        mock_executor = MagicMock()
         mock_executor.invoke.return_value = {
             "output": "Here are some actuators that match your requirements...",
         }
