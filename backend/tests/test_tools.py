@@ -124,9 +124,13 @@ class TestSemanticSearchTool:
         tool.invoke({"query": "test", "k": 0})
         mock_data_service.semantic_search.assert_called_with("test", k=1)
         
-        # k=20 should be clamped to 10
+        # k=20 should be allowed (max is 20)
         tool.invoke({"query": "test", "k": 20})
-        mock_data_service.semantic_search.assert_called_with("test", k=10)
+        mock_data_service.semantic_search.assert_called_with("test", k=20)
+        
+        # k=25 should be clamped to 20
+        tool.invoke({"query": "test", "k": 25})
+        mock_data_service.semantic_search.assert_called_with("test", k=20)
     
     def test_tool_no_data_service(self):
         """Test tool execution when data service is None"""
