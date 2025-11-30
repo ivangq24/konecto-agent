@@ -41,7 +41,7 @@ class Settings(BaseSettings):
         chroma_persist_directory: Directory for ChromaDB persistence
         raw_data_path: Path to raw data directory
         processed_data_path: Path to processed data directory
-        agent_temperature: LLM temperature (0.0 = deterministic)
+        agent_temperature: LLM temperature (0.5)
         agent_max_iterations: Maximum agent iterations
         agent_verbose: Enable verbose agent logging
         langfuse_enabled: Enable Langfuse observability
@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     processed_data_path: str = "data/processed"
     
     # Agent Configuration
-    agent_temperature: float = 0.0
+    agent_temperature: float = 0.5
     agent_max_iterations: int = 3
     agent_verbose: bool = False  # Set to True for debugging
     

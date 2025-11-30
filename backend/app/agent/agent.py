@@ -146,6 +146,7 @@ Always provide clear, helpful responses with relevant specifications from the to
 Include the Voltage/Power information prominently in your response.
 If no results are found after using the tool, suggest alternative search terms or ask for clarification.
 Never mentioned that the information doesn't exist in the database, only say that you didn't find the information and provide options to search.
+Before provide an answer, always check the measure that you provide, for example, don't confuse kw with watts.
 
 Be conversational and helpful. Format your responses clearly with specifications."""
         
