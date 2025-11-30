@@ -7,8 +7,8 @@ Each extracted table is saved as a separate CSV file in the specified output dir
 The script:
 1. Uploads the PDF to Google Gemini
 2. Uses Gemini to extract all tables from the document
-3. Adds a "Context_Type" column as the first column to each table
-4. Saves each table as a separate CSV file with naming pattern: <pdf_name>_table_<N>.csv
+3. Adds "Context_Type" and "Enclosure_Type" columns to each table
+4. Saves each table as a separate CSV file with naming pattern: Context_Type_Enclosure_Type.csv
 5. Returns a list of DataFrames for further processing
 
 Requirements:
@@ -33,7 +33,6 @@ except ImportError:
         print(df.to_markdown(index=False, numalign="left", stralign="left"))
 
 
-# --- CONFIG API KEY ---
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 if not GOOGLE_API_KEY:
@@ -60,7 +59,6 @@ def extract_and_split_tables(pdf_path: str, output_dir: str):
     pdf_path = Path(pdf_path)
     output_dir = Path(output_dir)
     
-    # 1. Verification and preparation
     if not pdf_path.exists():
         raise FileNotFoundError(f"PDF not found: {pdf_path}")
     
@@ -74,23 +72,25 @@ def extract_and_split_tables(pdf_path: str, output_dir: str):
         print(f"Error uploading file to Gemini: {e}")
         return []
 
-    # 2. Prompt for multiple tables
     prompt = """
     Extract ALL tables from this document.
     
     For each table found:
     1.  **Add Context Column:** Create a new column as the FIRST column in the CSV. Name this column "Context_Type".
-    2.  **Format:** Generate the data as raw, comma-separated CSV text (NO markdown, NO code blocks, NO text preamble).
-    3.  **Delimiter:** Use a comma (,) as the separator.
-    4.  **Numbers:** Write ALL numeric values WITHOUT thousand separators. For example, write "1330" not "1,330", write "15000" not "15,000".
-    5.  **Identification:** Immediately before the raw CSV text for each table, you MUST insert a unique identifier on its own line: ---TABLE_START_[N]---, where [N] is the sequential number of the table (starting at 1).
+    2.  **Add Enclosure Type column:** Create a new column as the SECOND column in the CSV. Name this column "Enclosure_Type".
+    3.  **Format:** Generate the data as raw, comma-separated CSV text (NO markdown, NO code blocks, NO text preamble), the format should be consistent between tables and rows.
+    4.  **Context_Type Format:** For the Context_Type column, use consistent formatting WITHOUT dashes as separators:
+       - Standard format: "[Voltage] [Phase Type] Power" (no dashes between voltage and phase)
+    5.  **Delimiter:** Use a comma (,) as the separator.
+    6.  **Numbers:** Write ALL numeric values WITHOUT thousand separators. For example, write "1330" not "1,330", write "15000" not "15,000".
+    7.  **Identification:** Immediately before the raw CSV text for each table, you MUST insert a unique identifier on its own line: ---TABLE_START_[N]---, where [N] is the sequential number of the table (starting at 1).
 
     CRITICAL: Do NOT use commas as thousand separators in numeric values. Only use commas to separate CSV fields.
+    CRITICAL: Format Context_Type consistently without dashes between voltage and phase type.
 
     The final output MUST consist ONLY of the numbered table separators and the raw CSV text blocks.
     """
 
-    # 3. Call the model
     print("Processing PDF with Gemini (gemini-2.5-pro)...")
     model = genai.GenerativeModel("gemini-2.5-pro")
 
@@ -101,14 +101,12 @@ def extract_and_split_tables(pdf_path: str, output_dir: str):
         print(f"Error generating content with Gemini: {e}")
         return []
     finally:
-        # Try to delete the remote file 
         try:
             genai.delete_file(file.name)
             print("Remote file deleted.")
         except Exception as e_del:
             print(f"Warning: Could not delete remote file: {e_del}")
 
-    # 4. Parse output and save tables
     tables = csv_output.split("---TABLE_START_")
     
     print(f"\nSaving tables to: {output_dir}")
@@ -124,23 +122,92 @@ def extract_and_split_tables(pdf_path: str, output_dir: str):
             if len(parts) < 2:
                 continue
 
-            table_number = parts[0].strip()        # "1", "2", etc.
-            csv_data = parts[1].strip()            # CSV content
+            table_number = parts[0].strip()
+            csv_data = parts[1].strip()
 
-            base_name = pdf_path.stem              # filename without extension
-            output_filename = output_dir / f"{base_name}_table_{table_number}.csv"
-            
-            with open(output_filename, "w", encoding="utf-8") as f:
+            # First, save to a temporary file to read with pandas
+            temp_filename = output_dir / f"temp_table_{table_number}.csv"
+            with open(temp_filename, "w", encoding="utf-8") as f:
                 f.write(csv_data)
-                
-            print(f"Table {table_number} saved as {output_filename.name}")
-
-            # Try to load with pandas
+            
+            # Try to load with pandas to extract Context_Type and Enclosure_Type
             try:
-                df = pd.read_csv(output_filename)
+                # Try reading with headers first
+                df = pd.read_csv(temp_filename)
+                
+                # Check if we have Context_Type and Enclosure_Type columns
+                has_headers = "Context_Type" in df.columns and "Enclosure_Type" in df.columns
+                
+                if not has_headers:
+                    # If no headers, read again without headers and use first row as data
+                    df = pd.read_csv(temp_filename, header=None)
+                
+                if df.empty:
+                    # Fallback to original naming if empty
+                    base_name = pdf_path.stem
+                    output_filename = output_dir / f"{base_name}_table_{table_number}.csv"
+                    temp_filename.rename(output_filename)
+                    print(f"Table {table_number} saved as {output_filename.name} (fallback - empty file)")
+                    continue
+                
+                # Extract Context_Type and Enclosure_Type
+                if has_headers:
+                    context_type = str(df.iloc[0]["Context_Type"]).strip() if pd.notna(df.iloc[0]["Context_Type"]) else "Unknown"
+                    enclosure_type = str(df.iloc[0]["Enclosure_Type"]).strip() if pd.notna(df.iloc[0]["Enclosure_Type"]) else "Unknown"
+                else:
+                    # First column is Context_Type, second is Enclosure_Type
+                    context_type = str(df.iloc[0][0]).strip() if df.shape[1] > 0 and pd.notna(df.iloc[0][0]) else "Unknown"
+                    enclosure_type = str(df.iloc[0][1]).strip() if df.shape[1] > 1 and pd.notna(df.iloc[0][1]) else "Unknown"
+                
+                # Normalize for filename: remove/replace invalid characters
+                def sanitize_filename(text: str) -> str:
+                    """Sanitize text to be a valid filename"""
+                    if not text or pd.isna(text):
+                        return "Unknown"
+                    text = str(text).strip()
+                    # Replace spaces with underscores
+                    text = text.replace(" ", "_")
+                    # Remove or replace invalid characters
+                    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '-', ',', '&']
+                    for char in invalid_chars:
+                        text = text.replace(char, "_")
+                    # Remove multiple underscores
+                    while "__" in text:
+                        text = text.replace("__", "_")
+                    # Remove leading/trailing underscores
+                    text = text.strip("_")
+                    return text if text else "Unknown"
+                
+                context_safe = sanitize_filename(context_type)
+                enclosure_safe = sanitize_filename(enclosure_type)
+                
+                # Create filename: Context_Type_Enclosure_Type.csv
+                output_filename = output_dir / f"{context_safe}_{enclosure_safe}.csv"
+                
+                # Handle duplicate filenames by appending table number
+                if output_filename.exists() and output_filename != temp_filename:
+                    output_filename = output_dir / f"{context_safe}_{enclosure_safe}_{table_number}.csv"
+                
+                # Rename temp file to final filename
+                temp_filename.rename(output_filename)
+                print(f"Table {table_number} saved as {output_filename.name}")
+                print(f"  Context_Type: {context_type}")
+                print(f"  Enclosure_Type: {enclosure_type}")
+                
+                # Re-read with proper headers if needed for the DataFrame
+                if not has_headers:
+                    df = pd.read_csv(output_filename, header=None)
+                
                 extracted_dfs.append(df)
+                    
             except Exception as e_pandas:
+                # Fallback to original naming if pandas parsing fails
+                base_name = pdf_path.stem
+                output_filename = output_dir / f"{base_name}_table_{table_number}.csv"
+                if temp_filename.exists():
+                    temp_filename.rename(output_filename)
                 print(f"   Warning: Pandas could not parse table {table_number}: {e_pandas}")
+                print(f"   Saved as {output_filename.name}")
 
         except Exception as e:
             print(f"Error processing a table block: {e}")
@@ -177,24 +244,18 @@ def main():
     
     args = parser.parse_args()
     
-    # Use relative paths from the script location
     script_dir = Path(__file__).parent
     
-    # Set default paths if not provided
-    # In Docker, WORKDIR is /app, so we need to go up from scripts/ to app/ then to data/
     if args.pdf:
         pdf_path = Path(args.pdf)
     else:
-        # Resolve relative to app root (go up from scripts/ to app/)
         pdf_path = script_dir.parent / "data/raw/series_75_data.pdf"
     
     if args.output:
         output_dir = Path(args.output)
     else:
-        # Resolve relative to app root (go up from scripts/ to app/)
         output_dir = script_dir.parent / "data/processed"
     
-    # Resolve paths to absolute for consistency
     pdf_path = pdf_path.resolve()
     output_dir = output_dir.resolve()
     

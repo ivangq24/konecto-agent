@@ -1,146 +1,138 @@
-# Evaluación de Accuracy del Agente
+# Agent Accuracy Evaluation
 
-Este directorio contiene el sistema de evaluación para medir el accuracy del agente de actuadores.
+This directory contains the evaluation system for measuring the accuracy of the actuator agent.
 
-## Archivos
+## Files
 
-- `dataset.json`: Dataset con 20 casos de prueba
-- `results/`: Directorio con resultados de evaluaciones pasadas
+- `dataset.json`: Dataset with 20 test cases
+- `results/`: Directory with past evaluation results
 
-## Casos de prueba (20 total)
+## Test Cases (20 total)
 
-### Por categoría:
-- **exact_search** (4 casos): Búsquedas por part number exacto
-- **semantic_search** (12 casos): Búsquedas semánticas con diferentes requisitos
-- **incomplete_spec** (2 casos): Especificaciones incompletas que requieren clarificación
-- **context_memory** (2 casos): Tests de memoria contextual
+### By category:
+- **exact_search** (4 cases): Exact part number searches
+- **semantic_search** (12 cases): Semantic searches with different requirements
+- **incomplete_spec** (2 cases): Incomplete specifications requiring clarification
+- **context_memory** (2 cases): Contextual memory tests
 
-## Ejecutar evaluación
-
-### Opción 1: Dentro del contenedor Docker
+## Run Evaluation
 
 ```bash
 docker-compose exec backend python evaluate_agent.py
 ```
 
-### Opción 2: Localmente
+## Evaluated Metrics
 
-```bash
-cd backend
-python evaluate_agent.py
-```
+For each test case, the following are evaluated:
 
-## Métricas evaluadas
-
-Para cada caso de prueba se evalúa:
-
-1. **tool_usage_correct**: ¿Se usó la herramienta correcta?
-2. **expected_fields_present**: ¿Están los campos esperados? (80% threshold)
-3. **part_number_correct**: ¿El part number es correcto?
-4. **context_type_correct**: ¿El voltage/power type es correcto?
-5. **min_results_satisfied**: ¿Se devolvieron suficientes resultados?
-6. **clarification_asked**: ¿Se pidió clarificación cuando era necesario?
-7. **ground_truth**: ¿Los valores numéricos coinciden con ground truth? (tolerancia 5%)
+1. **tool_usage_correct**: Was the correct tool used?
+2. **expected_fields_present**: Are the expected fields present? (80% threshold)
+3. **part_number_correct**: Is the part number correct?
+4. **context_type_correct**: Is the voltage/power type correct?
+5. **min_results_satisfied**: Were enough results returned?
+6. **clarification_asked**: Was clarification requested when necessary?
+7. **ground_truth**: Do numeric values match ground truth? (5% tolerance)
+8. **response_contains_all**: Does the response contain all required strings? (e.g., all voltage options)
 
 ### Ground Truth Validation
 
-Para casos con `ground_truth` definido, se valida:
-- Valores numéricos exactos (torque, potencia, velocidad, etc.)
-- Tolerancia de ±5% para valores numéricos
-- Valores de texto exactos (context_type, part number)
-- Score general de precisión de datos (0-100%)
+For cases with `ground_truth` defined, the following are validated:
+- Exact numeric values (torque, power, speed, etc.)
+- ±5% tolerance for numeric values
+- Exact text values (context_type, part number)
+- Overall data accuracy score (0-100%)
 
 ## Scoring
 
-- **Score individual**: 0-100% basado en métricas pasadas
-- **Accuracy general**: % de tests que pasaron todos los checks
-- **Score promedio**: Promedio de scores individuales
+- **Individual Score**: 0-100% based on passed metrics
+- **Overall Accuracy**: % of tests that passed all checks
+- **Average Score**: Average of individual scores
 
-## Integración con Langfuse
+## Langfuse Integration
 
-El script de evaluación está completamente integrado con Langfuse y utiliza sus herramientas nativas:
+The evaluation script is fully integrated with Langfuse and uses its native tools:
 
-### Dataset en Langfuse
+### Dataset in Langfuse
 
-El script automáticamente:
-1. **Crea un dataset** llamado `actuator-agent-eval` en Langfuse (o lo actualiza si ya existe)
-2. **Agrega todos los casos de prueba** como items del dataset con:
-   - Input: query del usuario, categoría, herramienta esperada
-   - Expected Output: ground truth, part numbers esperados, context types, etc.
-   - Metadata: categoría y descripción del test
+The script automatically:
+1. **Creates a dataset** named `actuator-agent-eval` in Langfuse (or updates it if it already exists)
+2. **Adds all test cases** as dataset items with:
+   - Input: user query, category, expected tool
+   - Expected Output: ground truth, expected part numbers, context types, etc.
+   - Metadata: category and test description
 
-Puedes ver y gestionar el dataset en el dashboard de Langfuse:
-- Navega a **Datasets** en el menú
-- Busca `actuator-agent-eval`
-- Verás todos los casos de prueba con sus inputs y expected outputs
+You can view and manage the dataset in the Langfuse dashboard:
+- Navigate to **Datasets** in the menu
+- Search for `actuator-agent-eval`
+- You'll see all test cases with their inputs and expected outputs
 
-### Traces y Scores
+### Traces and Scores
 
-Cada ejecución del agente durante la evaluación:
-- Se registra automáticamente como una **trace** (gracias al `CallbackHandler` en el agente)
-- Recibe múltiples **scores**:
-  - `tool_usage_correct`: 1.0 si se usó la herramienta correcta, 0.0 si no
-  - `expected_fields_present`: 1.0 si los campos esperados están presentes
-  - `part_number_correct`: 1.0 si el part number es correcto
-  - `context_type_correct`: 1.0 si el context type es correcto
-  - `min_results_satisfied`: 1.0 si se devolvieron suficientes resultados
-  - `clarification_asked`: 1.0 si se pidió clarificación cuando era necesario
-  - `ground_truth_accuracy`: Accuracy del ground truth (0.0-1.0)
-  - `overall_score`: Score general del test (0.0-1.0)
+Each agent execution during evaluation:
+- Is automatically recorded as a **trace** (thanks to the `CallbackHandler` in the agent)
+- Receives multiple **scores**:
+  - `tool_usage_correct`: 1.0 if the correct tool was used, 0.0 otherwise
+  - `expected_fields_present`: 1.0 if expected fields are present
+  - `part_number_correct`: 1.0 if the part number is correct
+  - `context_type_correct`: 1.0 if the context type is correct
+  - `min_results_satisfied`: 1.0 if enough results were returned
+  - `clarification_asked`: 1.0 if clarification was requested when necessary
+  - `ground_truth_accuracy`: Ground truth accuracy (0.0-1.0)
+  - `overall_score`: Overall test score (0.0-1.0)
 
-### Visualización en Langfuse
+### Visualization in Langfuse
 
-Después de ejecutar el script, visita tu dashboard de Langfuse para ver:
+After running the script, visit your Langfuse dashboard to see:
 
-1. **Traces**: Cada ejecución del agente durante la evaluación
-   - Filtra por `test_case_id` en metadata para encontrar casos específicos
-   - Revisa los inputs, outputs y tool calls
+1. **Traces**: Each agent execution during evaluation
+   - Filter by `test_case_id` in metadata to find specific cases
+   - Review inputs, outputs, and tool calls
 
-2. **Scores**: Métricas de evaluación adjuntas a cada trace
-   - Ve el rendimiento del agente en cada métrica
-   - Identifica qué tests están fallando y por qué
+2. **Scores**: Evaluation metrics attached to each trace
+   - See agent performance on each metric
+   - Identify which tests are failing and why
 
-3. **Datasets**: El dataset `actuator-agent-eval` con todos los casos de prueba
-   - Gestiona tus casos de prueba desde la UI
-   - Ejecuta evaluaciones directamente desde Langfuse (si está disponible en tu plan)
+3. **Datasets**: The `actuator-agent-eval` dataset with all test cases
+   - Manage your test cases from the UI
+   - Run evaluations directly from Langfuse (if available in your plan)
 
-4. **Analytics**: Métricas agregadas
-   - Accuracy por categoría
-   - Tendencias a lo largo del tiempo
-   - Comparación entre diferentes versiones del agente
+4. **Analytics**: Aggregated metrics
+   - Accuracy by category
+   - Trends over time
+   - Comparison between different agent versions
 
-### Acceso al Dashboard
+### Dashboard Access
 
-1. Ve a https://cloud.langfuse.com (o tu instancia local)
-2. Abre tu proyecto
-3. Navega a:
-   - **Datasets** → `actuator-agent-eval` para ver los casos de prueba
-   - **Traces** → Filtra por metadata `test_case_id` para ver ejecuciones específicas
-   - **Scores** → Ve todas las métricas de evaluación
+1. Go to https://cloud.langfuse.com (or your local instance)
+2. Open your project
+3. Navigate to:
+   - **Datasets** → `actuator-agent-eval` to see test cases
+   - **Traces** → Filter by metadata `test_case_id` to see specific executions
+   - **Scores** → View all evaluation metrics
 
-## Resultados
+## Results
 
-Los resultados se guardan en:
-- `evaluation/results/{run_name}.json`: Resultados completos
-- `evaluation/results/latest.json`: Última evaluación
+Results are saved in:
+- `evaluation/results/{run_name}.json`: Complete results
+- `evaluation/results/latest.json`: Latest evaluation
 
-## Interpretar resultados
+## Interpreting Results
 
-### Accuracy objetivo
-- **≥ 90%**: Excelente
-- **80-89%**: Bueno
-- **70-79%**: Aceptable, requiere mejoras
-- **< 70%**: Requiere optimización urgente
+### Target Accuracy
+- **≥ 90%**: Excellent
+- **80-89%**: Good
+- **70-79%**: Acceptable, requires improvements
+- **< 70%**: Requires urgent optimization
 
-### Categorías más comunes de fallos
-1. Herramienta incorrecta usada
-2. Campos faltantes en respuesta
-3. No pide clarificación cuando debería
-4. Resultados insuficientes
+### Most Common Failure Categories
+1. Incorrect tool used
+2. Missing fields in response
+3. Does not ask for clarification when it should
+4. Insufficient results
 
-## Agregar nuevos casos
+## Adding New Test Cases
 
-### Ejemplo con ground_truth (recomendado para exact_search):
+### Example with ground_truth (recommended for exact_search):
 
 ```json
 {
@@ -163,7 +155,7 @@ Los resultados se guardan en:
 }
 ```
 
-### Ejemplo sin ground_truth (para semantic_search):
+### Example without ground_truth (for semantic_search):
 
 ```json
 {
@@ -177,40 +169,41 @@ Los resultados se guardan en:
 }
 ```
 
-### Campos disponibles:
+### Available Fields:
 
-- `id`: Identificador único (requerido)
-- `category`: exact_search|semantic_search|incomplete_spec|context_memory (requerido)
-- `input`: Mensaje del usuario (requerido)
-- `expected_tool`: Herramienta esperada (opcional)
-- `expected_part_number`: Part number esperado (opcional)
-- `expected_context_type_contains`: Texto esperado en context_type (opcional)
-- `ground_truth`: Valores exactos esperados (opcional, recomendado para exact_search)
-- `min_results`: Mínimo de resultados (opcional)
-- `max_results`: Máximo de resultados (opcional)
-- `should_ask_clarification`: Si debe pedir clarificación (opcional)
-- `validate_*`: Validaciones especiales (opcional)
-- `description`: Descripción del test (requerido)
+- `id`: Unique identifier (required)
+- `category`: exact_search|semantic_search|incomplete_spec|context_memory (required)
+- `input`: User message (required)
+- `expected_tool`: Expected tool (optional)
+- `expected_part_number`: Expected part number (optional)
+- `expected_context_type_contains`: Expected text in context_type (optional)
+- `ground_truth`: Exact expected values (optional, recommended for exact_search)
+- `min_results`: Minimum results (optional)
+- `max_results`: Maximum results (optional)
+- `should_ask_clarification`: Whether clarification should be requested (optional)
+- `response_contains_all`: List of strings that MUST appear in response (optional)
+- `validate_*`: Special validations (optional)
+- `description`: Test description (required)
 
-## Ejemplo de salida
+## Example Output
 
 ```
-RESUMEN DE EVALUACIÓN
+EVALUATION SUMMARY
 ================================================================================
 
-Total de tests: 20
-Pasados: 18 (90.0%)
-Fallidos: 2
-Score promedio: 92.5%
+Total tests: 20
+Passed: 18 (90.0%)
+Failed: 2
+Average score: 92.5%
 
-ACCURACY POR CATEGORÍA
+ACCURACY BY CATEGORY
 --------------------------------------------------------------------------------
 exact_search          4/ 4 (100.0%)
 semantic_search      11/12 (91.7%)
 incomplete_spec       2/ 2 (100.0%)
 context_memory        1/ 2 (50.0%)
 
-TESTS FALLIDOS
+FAILED TESTS
 --------------------------------------------------------------------------------
 test_016: context_memory
    Input: single phase

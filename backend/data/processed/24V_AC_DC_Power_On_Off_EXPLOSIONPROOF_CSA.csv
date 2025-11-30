@@ -1,0 +1,6 @@
+Context_Type,Enclosure_Type,Base_Part_Number,On/Off_Output_Torque_In-Lbs,On/Off_Output_Torque_Nm,On/Off_Duty_Cycle_S4_percent,Cycles_per_Hour,Operating_Speed_Sec,Full_Load_Current_FLA_Amps,Locked_Rotor_Current_LRA_Amps,Motor_Power_Watts
+24V AC/DC Power On/Off,EXPLOSIONPROOF - CSA,761X30-11380000/A,620,70,30,350,17,5.0,12.8,
+24V AC/DC Power On/Off,EXPLOSIONPROOF - CSA,761Y30-11380000/A,700,80,30,300,20,6.3,12.8,
+24V AC/DC Power On/Off,EXPLOSIONPROOF - CSA,762X30-11380000/A,1350,150,40,200,22,6.0,16.9,40
+24V AC/DC Power On/Off,EXPLOSIONPROOF - CSA,762Y30-11380000/A,1410,160,40,200,22,7.4,16.9,40
+24V AC/DC Power On/Off,EXPLOSIONPROOF - CSA,763X30-11380000/A,2120,240,35,160,32,8.9,30.8,40

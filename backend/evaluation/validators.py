@@ -308,6 +308,27 @@ class ResponseValidators:
         return expected_pn in response
     
     @staticmethod
+    def check_response_contains_all(response: str, test_case: Dict) -> bool:
+        """
+        Verify that the response contains all strings in the expected list.
+        
+        Args:
+            response: Agent's response text
+            test_case: Test case dictionary with response_contains_all list
+            
+        Returns:
+            True if all expected strings are found, False otherwise
+        """
+        expected_strings = test_case.get("response_contains_all", [])
+        if not expected_strings:
+            return True
+            
+        response_lower = response.lower()
+        missing = [s for s in expected_strings if s.lower() not in response_lower]
+        
+        return len(missing) == 0
+
+    @staticmethod
     def check_context_type(response: str, test_case: Dict) -> bool:
         """
         Verify that the expected context_type (voltage/power) is present in the response.

@@ -36,14 +36,14 @@ class SemanticSearchInput(BaseModel):
     
     Attributes:
         query: Natural language description of actuator requirements
-        k: Number of results to return (1-10, default: 3)
+        k: Number of results to return (1-20, default: 3)
     """
     query: str = Field(
         description="A natural language query describing the actuator requirements or specifications"
     )
     k: int = Field(
         default=3,
-        description="Number of results to return (default: 3, max: 10)"
+        description="Number of results to return (default: 3, max: 20)"
     )
 
 
@@ -81,7 +81,7 @@ def create_semantic_search_tool(data_service: "DataService"):
         
         Args:
             query: Natural language description of what you're looking for
-            k: Number of results to return (1-10, default: 3)
+            k: Number of results to return (1-20, default: 3)
             
         Returns:
             A formatted string with matching actuator specifications, ordered by relevance.
@@ -101,15 +101,13 @@ def create_semantic_search_tool(data_service: "DataService"):
             return "Error: Data service not available"
         
         try:
-            # Limit k to reasonable range
-            k = min(max(1, k), 10)
+            k = min(max(1, k), 20)
             
             results = data_service.semantic_search(query, k=k)
             
             if not results:
                 return f"No actuators found matching: {query}"
             
-            # Format the results
             formatted_results = []
             for i, result in enumerate(results, 1):
                 metadata = result.get("metadata", {})

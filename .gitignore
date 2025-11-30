@@ -28,12 +28,10 @@ yarn-error.log*
 *.sqlite3
 
 # Data
-backend/data/processed/*
-!backend/data/processed/.gitkeep
-
-# ChromaDB vector stores (should not be in repo)
-**/chroma/
-**/*.bin
+# Note: Including processed data and ChromaDB for deployment
+# Exclude only temporary database files
+backend/data/processed/*.db-shm
+backend/data/processed/*.db-wal
 backend/scripts/data/
 
 # IDE
@@ -56,3 +54,9 @@ frontend/build/
 .DS_Store
 Thumbs.db
 
+# Database
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3

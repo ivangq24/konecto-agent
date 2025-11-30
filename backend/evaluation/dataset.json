@@ -97,7 +97,7 @@
       "category": "semantic_search",
       "input": "Show me 220V three phase actuators",
       "expected_tool": "semantic_search",
-      "expected_context_type_contains": "220V",
+      "expected_context_type_contains": "3 Phase",
       "min_results": 3,
       "description": "Complete specification - 220V three phase"
     },
@@ -126,7 +126,8 @@
       "expected_tool": "semantic_search",
       "should_ask_clarification": true,
       "clarification_about": "voltage",
-      "description": "Incomplete spec - missing voltage"
+      "response_contains_all": ["110V", "220V"],
+      "description": "Incomplete spec - missing voltage (must list options)"
     },
     {
       "id": "test_011",
@@ -220,6 +221,15 @@
       "min_results": 3,
       "max_results": 3,
       "description": "Multiple recommendations with voltage"
+    },
+    {
+      "id": "test_021",
+      "category": "semantic_search",
+      "input": "Do you have 220V single phase actuators?",
+      "expected_tool": "semantic_search",
+      "expected_context_type_contains": "Single Phase",
+      "min_results": 1,
+      "description": "Specific check for 220V Single Phase availability"
     }
   ]
 }

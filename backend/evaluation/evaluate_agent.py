@@ -139,6 +139,7 @@ class AgentEvaluator:
                 "context_type_correct": self.validators.check_context_type(response_text, test_case),
                 "min_results_satisfied": self.validators.check_min_results(response_text, test_case),
                 "clarification_asked": self.validators.check_clarification(response_text, test_case),
+                "response_contains_all": self.validators.check_response_contains_all(response_text, test_case),
             }
             
             # Check ground truth if available
@@ -152,6 +153,7 @@ class AgentEvaluator:
                 metrics["part_number_correct"],
                 metrics["context_type_correct"],
                 metrics["min_results_satisfied"],
+                metrics["response_contains_all"],
             ]
             
             # If ground truth was checked, require high accuracy

@@ -19,6 +19,7 @@ konecto-agent/
 │   │   └── processed/           # Generated CSVs, SQLite DB, Chroma DB
 │   ├── scripts/                 # Data processing pipeline
 │   │   ├── ingest.py            # PDF extraction (Gemini)
+│   │   ├── rename_csv_files.py  # CSV file renaming
 │   │   ├── build_sqlite_db.py   # SQLite builder
 │   │   ├── build_vector_db.py   # ChromaDB builder
 │   │   └── process_data.py      # Orchestrator script
@@ -42,6 +43,7 @@ konecto-agent/
 - Docker and Docker Compose installed
 - Git installed
 - Valid OpenAI API key
+- Valid Google API key (for PDF extraction)
 - (Optional) Langfuse Cloud account for observability
 
 ### 1. Clone the repository
@@ -60,6 +62,7 @@ cd backend
 cp .env.example .env
 # Edit backend/.env and set at least:
 # OPENAI_API_KEY=sk-xxxx
+# GOOGLE_API_KEY=xxxx
 # (Optional) LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY for Langfuse Cloud
 cd ..
 ```
@@ -92,8 +95,9 @@ Before starting the API, you must process the raw PDF data. Run the orchestrator
 ```bash
 # This runs the full pipeline:
 # 1. Extract tables from PDF (ingest.py)
-# 2. Build SQLite database (build_sqlite_db.py)
-# 3. Build vector database (build_vector_db.py)
+# 2. Rename CSV files with descriptive names (rename_csv_files.py)
+# 3. Build SQLite database (build_sqlite_db.py)
+# 4. Build vector database (build_vector_db.py)
 
 docker-compose run --rm backend python scripts/process_data.py
 ```
@@ -116,11 +120,12 @@ docker-compose up
 
 ## Data Processing
 
-The data pipeline is automated via `backend/scripts/process_data.py`. It performs three steps sequentially:
+The data pipeline is automated via `backend/scripts/process_data.py`. It performs four steps sequentially:
 
 1.  **Ingestion**: Uses Google Gemini 2.5 Pro to extract tables from the PDF into structured CSVs.
-2.  **Structured Storage (SQLite)**: Consolidates all CSVs into a single SQLite table with a JSON column for flexible schema querying (exact match).
-3.  **Vector Storage (ChromaDB)**: Chunks data row-by-row into text embeddings for semantic search.
+2.  **File Renaming**: Renames CSV files with descriptive names based on `Context_Type` and `Enclosure_Type` (e.g., `220V_3_Phase_Power_WEATHERPROOF_CSA_CE_UKCA.csv`).
+3.  **Structured Storage (SQLite)**: Consolidates all CSVs into a single SQLite table with a JSON column for flexible schema querying (exact match).
+4.  **Vector Storage (ChromaDB)**: Chunks data row-by-row into text embeddings for semantic search.
 
 You can re-run the pipeline at any time to update the databases if the source PDF changes.
 

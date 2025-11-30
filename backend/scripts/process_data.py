@@ -3,8 +3,9 @@ Data Processing Orchestrator Script
 
 This script orchestrates the complete data transformation pipeline:
 1. Extracts tables from PDF using Google Gemini (ingest.py)
-2. Builds SQLite database from CSV files (build_sqlite_db.py)
-3. Builds vector database with embeddings (build_vector_db.py)
+2. Renames CSV files with descriptive names based on Context_Type and Enclosure_Type (rename_csv_files.py)
+3. Builds SQLite database from CSV files (build_sqlite_db.py)
+4. Builds vector database with embeddings (build_vector_db.py)
 
 The script ensures each step completes successfully before proceeding to the next,
 providing clear progress feedback and error handling.
@@ -55,12 +56,10 @@ def run_script(script_name: str, description: str, args: Optional[list] = None) 
     print()
     
     try:
-        # Build command
         cmd = [sys.executable, str(script_path)]
         if args:
             cmd.extend(args)
         
-        # Execute script
         result = subprocess.run(cmd, cwd=str(script_dir))
         
         if result.returncode == 0:
@@ -81,7 +80,7 @@ def main():
     """
     Main entry point for the data processing orchestrator.
     
-    Orchestrates the execution of ingest.py, build_sqlite_db.py, and build_vector_db.py
+    Orchestrates the execution of ingest.py, rename_csv_files.py, build_sqlite_db.py, and build_vector_db.py
     in sequence, with error handling and progress reporting.
     """
     parser = argparse.ArgumentParser(
@@ -133,7 +132,6 @@ Examples:
     
     args = parser.parse_args()
     
-    # Build arguments for ingest.py
     ingest_args = []
     if args.pdf:
         ingest_args.extend(["--pdf", args.pdf])
@@ -145,8 +143,9 @@ Examples:
     print("=" * 80)
     print("\nThis script will execute the following steps:")
     print("  1. Extract tables from PDF (ingest.py)")
-    print("  2. Build SQLite database (build_sqlite_db.py)")
-    print("  3. Build vector database (build_vector_db.py)")
+    print("  2. Rename CSV files with descriptive names (rename_csv_files.py)")
+    print("  3. Build SQLite database (build_sqlite_db.py)")
+    print("  4. Build vector database (build_vector_db.py)")
     print()
     
     if args.skip_ingest:
@@ -157,7 +156,6 @@ Examples:
         print("⚠️  Skipping: Vector database building (build_vector_db.py)")
     print()
     
-    # Step 1: Extract tables from PDF
     if not args.skip_ingest:
         exit_code = run_script(
             "ingest.py",
@@ -169,12 +167,26 @@ Examples:
             print("PIPELINE FAILED: PDF extraction step failed")
             print("=" * 80)
             return exit_code
+        
+        print("\n" + "=" * 80)
+        print("STEP: Rename CSV Files")
+        print("=" * 80)
+        print("Renaming CSV files to use descriptive names based on Context_Type and Enclosure_Type")
+        print()
+        
+        exit_code = run_script(
+            "rename_csv_files.py",
+            "CSV File Renaming"
+        )
+        if exit_code != 0:
+            print("\n" + "=" * 80)
+            print("WARNING: CSV renaming step had issues, but continuing...")
+            print("=" * 80)
     else:
         print("\n" + "=" * 80)
         print("SKIPPED: PDF Table Extraction")
         print("=" * 80)
     
-    # Step 2: Build SQLite database
     if not args.skip_sqlite:
         exit_code = run_script(
             "build_sqlite_db.py",
@@ -190,7 +202,6 @@ Examples:
         print("SKIPPED: SQLite Database Building")
         print("=" * 80)
     
-    # Step 3: Build vector database
     if not args.skip_vector:
         exit_code = run_script(
             "build_vector_db.py",
@@ -206,7 +217,6 @@ Examples:
         print("SKIPPED: Vector Database Building")
         print("=" * 80)
     
-    # Success
     print("\n" + "=" * 80)
     print("PIPELINE COMPLETED SUCCESSFULLY!")
     print("=" * 80)

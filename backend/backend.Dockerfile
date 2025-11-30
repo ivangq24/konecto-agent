@@ -1,8 +1,8 @@
-# Dockerfile optimizado para DESARROLLO
+# Dockerfile optimized for DEVELOPMENT
 
 FROM python:3.11-slim
 
-# Establecer variables de entorno para desarrollo
+# Set environment variables for development
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
@@ -11,7 +11,7 @@ ENV PYTHONHASHSEED=random
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Instalar dependencias del sistema necesarias para desarrollo
+# Install system dependencies required for development
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         gcc \
@@ -23,13 +23,13 @@ RUN apt-get update \
         htop \
     && rm -rf /var/lib/apt/lists/*
 
-# Crear directorio de trabajo
+# Create working directory
 WORKDIR /app
 
-# Copiar archivos de dependencias
+# Copy dependency files
 COPY requirements.txt .
 
-# Instalar dependencias de Python incluyendo las de desarrollo
+# Install Python dependencies including development dependencies
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip install --no-cache-dir \
@@ -42,20 +42,23 @@ RUN pip install --no-cache-dir --upgrade pip \
         ipython \
         ipdb
 
-# Crear directorios necesarios para datos
+# Create necessary directories for data
 RUN mkdir -p /app/data/raw \
     && mkdir -p /app/data/processed \
     && mkdir -p /app/logs
 
-# Copiar código de la aplicación
+# Copy application code
 COPY app/ ./app/
-COPY scripts/build_vector_db.py .
-COPY scripts/build_sqlite_db.py .
-COPY scripts/ingest.py .
+COPY scripts/ ./scripts/
+COPY evaluation/ ./evaluation/
+COPY tests/ ./tests/
+COPY pytest.ini .
+COPY run_tests.py .
+COPY run_tests.sh .
 
-# Exponer puerto
+# Expose port
 EXPOSE 8000
 
-# Comando para ejecutar la aplicación en modo desarrollo con hot-reload
+# Command to run the application in development mode with hot-reload
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-level", "debug"]
 

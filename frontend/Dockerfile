@@ -1,16 +1,16 @@
-# Dockerfile optimizado para DESARROLLO
+# Dockerfile optimized for DEVELOPMENT
 
 FROM node:18-alpine
 
-# Establecer variables de entorno para desarrollo
+# Set environment variables for development
 ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV WATCHPACK_POLLING=true
 
-# Establecer directorio de trabajo
+# Set working directory
 WORKDIR /app
 
-# Instalar dependencias del sistema necesarias para desarrollo
+# Install system dependencies required for development
 RUN apk add --no-cache \
     libc6-compat \
     git \
@@ -19,17 +19,17 @@ RUN apk add --no-cache \
     htop \
     procps
 
-# Copiar archivos de dependencias
+# Copy dependency files
 COPY package*.json ./
 
-# Instalar TODAS las dependencias (incluyendo devDependencies)
+# Install ALL dependencies (including devDependencies)
 RUN npm install
 
-# Crear directorio para logs de desarrollo
+# Create directory for development logs
 RUN mkdir -p /app/logs
 
-# Exponer puerto
+# Expose port
 EXPOSE 3000
 
-# Comando para ejecutar la aplicación en modo desarrollo con hot-reload
+# Command to run the application in development mode with hot-reload
 CMD ["npm", "run", "dev"]

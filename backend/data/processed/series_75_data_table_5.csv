@@ -1,6 +1,0 @@
-Context_Type,Base Part Number,Modulating Output Torque_In-Lbs.,Modulating Output Torque_Nm,Modulating Duty Cycle_S4%,Starts per Hour_Starts,Operating Speed_Sec,Full Load Current (FLA)_Amps,Locked Rotor Current (LRA)_Amps,Motor Power_Watts
-24V DC Power - Modulating,761X30-11370000/A,560,65,30,720,17,5.0,12.8,
-24V DC Power - Modulating,761Y30-11370000/A,630,72,30,720,20,6.3,12.8,
-24V DC Power - Modulating,762X30-11370000/A,1150,130,40,960,22,6.0,16.9,40
-24V DC Power - Modulating,762Y30-11370000/A,1270,145,40,960,22,7.4,16.9,40
-24V DC Power - Modulating,763X30-11370000/A,1900,220,35,840,32,8.9,30.8,40

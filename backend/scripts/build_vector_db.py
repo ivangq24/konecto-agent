@@ -14,7 +14,7 @@ The script:
 Requirements:
 - OPENAI_API_KEY environment variable must be set
 - CSV files must exist in the processed data directory
-- CSV files must contain "Base Part Number" column
+- CSV files must contain "Base_Part_Number" column
 """
 
 import os
@@ -36,6 +36,130 @@ script_dir = Path(__file__).parent
 backend_dir = script_dir.parent  # Go up from scripts/ to backend/
 sys.path.insert(0, str(backend_dir))
 from app.config import get_settings
+
+
+def _read_csv_with_comma_handling(csv_file: Path) -> pd.DataFrame:
+    """
+    Read CSV file handling commas within values correctly.
+    
+    This function reads CSV files that may have commas within quoted or unquoted values,
+    reconstructing split columns (especially Context_Type and Enclosure_Type).
+    
+    Args:
+        csv_file: Path to CSV file
+        
+    Returns:
+        pandas DataFrame with correctly parsed columns
+    """
+    with open(csv_file, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        if len(lines) < 2:
+            return pd.DataFrame()
+        
+        # Parse header
+        header_line = lines[0].strip()
+        header_cols = [col.strip() for col in header_line.split(',')]
+        
+        # Find key column indices
+        try:
+            context_type_idx = header_cols.index("Context_Type")
+            enclosure_type_idx = header_cols.index("Enclosure_Type")
+            base_part_idx = header_cols.index("Base_Part_Number")
+        except ValueError:
+            # If we can't find these columns, fall back to standard pandas
+            return pd.read_csv(csv_file)
+        
+        # Reconstruct rows
+        reconstructed_rows = []
+        for line_idx, line in enumerate(lines[1:], 1):
+            line = line.strip()
+            if not line:
+                continue
+            
+            data_cols = [col.strip() for col in line.split(',')]
+            
+            # Reconstruct Context_Type
+            context_type = data_cols[context_type_idx] if len(data_cols) > context_type_idx else ""
+            
+            # Find where Base_Part_Number actually starts (look for first value starting with "76")
+            base_part_actual_idx = len(data_cols)
+            for i, col in enumerate(data_cols):
+                col_clean = col.strip()
+                if col_clean.startswith("76") and len(col_clean) > 5:
+                    base_part_actual_idx = i
+                    break
+            
+            # Reconstruct Enclosure_Type - collect parts until we hit Base_Part_Number
+            enclosure_parts = []
+            if len(data_cols) > enclosure_type_idx:
+                enclosure_parts.append(data_cols[enclosure_type_idx])
+                
+                # Collect Enclosure_Type parts until Base_Part_Number
+                idx = enclosure_type_idx + 1
+                while idx < base_part_actual_idx:
+                    part = data_cols[idx].strip()
+                    if part.startswith("76") and len(part) > 5:
+                        break
+                    if ("CE" in part or "UKCA" in part) or (len(part) > 0 and len(part) < 20 and not part[0].isdigit() and part != "N/A"):
+                        enclosure_parts.append(part)
+                        idx += 1
+                    else:
+                        break
+            
+            enclosure_type = ", ".join(enclosure_parts).strip() if enclosure_parts else ""
+            
+            # Get Base_Part_Number from the actual position
+            base_part_number = ""
+            if base_part_actual_idx < len(data_cols):
+                base_part_number = data_cols[base_part_actual_idx].strip()
+            
+            # Reconstruct the row with corrected values
+            reconstructed_row = data_cols.copy()
+            
+            # Update Context_Type if it was split
+            if len(reconstructed_row) > context_type_idx:
+                # Check if we need to reconstruct Context_Type
+                if context_type in ["CE", "& UKCA"] or (len(context_type) < 5 and "220V" not in context_type and "110V" not in context_type and "24V" not in context_type):
+                    # Look backwards to find the real Context_Type
+                    # Usually it's the first meaningful value before Enclosure_Type
+                    for i in range(enclosure_type_idx - 1, -1, -1):
+                        if i < len(data_cols) and data_cols[i].strip():
+                            potential_context = data_cols[i].strip()
+                            if ("220V" in potential_context or "110V" in potential_context or "24V" in potential_context) and len(potential_context) > 5:
+                                context_type = potential_context
+                                break
+            
+            # Update the row with corrected values
+            if len(reconstructed_row) > context_type_idx:
+                reconstructed_row[context_type_idx] = context_type
+            
+            if len(reconstructed_row) > enclosure_type_idx:
+                reconstructed_row[enclosure_type_idx] = enclosure_type
+            
+            # Update Base_Part_Number if we found it
+            if base_part_actual_idx < len(reconstructed_row) and base_part_number:
+                if len(reconstructed_row) > base_part_idx:
+                    reconstructed_row[base_part_idx] = base_part_number
+                elif base_part_actual_idx < len(reconstructed_row):
+                    # If Base_Part_Number is in a different position, we need to handle it
+                    # For now, just ensure it's in the right place
+                    pass
+            
+            reconstructed_rows.append(reconstructed_row)
+        
+        # Create DataFrame from reconstructed rows
+        # We need to ensure all rows have the same number of columns
+        max_cols = max(len(row) for row in reconstructed_rows) if reconstructed_rows else len(header_cols)
+        
+        # Pad rows to have the same number of columns
+        for row in reconstructed_rows:
+            while len(row) < max_cols:
+                row.append("")
+        
+        # Create DataFrame
+        df = pd.DataFrame(reconstructed_rows, columns=header_cols[:max_cols] if len(header_cols) >= max_cols else header_cols + [f"Column_{i}" for i in range(len(header_cols), max_cols)])
+        
+        return df
 
 
 def normalize_column_name(col_name: str) -> str:
@@ -65,7 +189,7 @@ def normalize_column_name(col_name: str) -> str:
 
 
 # Base Part Number column name
-BASE_PART_NUMBER_COL = "Base Part Number"
+BASE_PART_NUMBER_COL = "Base_Part_Number"
 
 def format_value(value: Any) -> Optional[str]:
     """
@@ -113,7 +237,7 @@ def create_metadata(row: pd.Series, source_table: str) -> Dict[str, Any]:
     Creates structured metadata dictionary from a DataFrame row.
     
     Extracts all column values and normalizes them for metadata storage.
-    Special handling for "Base Part Number" and "Context_Type" columns.
+    Special handling for "Base_Part_Number" and "Context_Type" columns.
     Numeric values are stored as floats, strings are truncated to 100 chars.
     
     Args:
@@ -237,8 +361,20 @@ def process_csv_files(csv_directory: str, settings) -> List[Document]:
         try:
             print(f"  Processing: {csv_file.name}")
 
-            # Read CSV
+            # Read CSV - handle commas within quoted values properly
+            # First try reading with standard pandas, but if we detect split columns,
+            # we'll need to reconstruct them
             df = pd.read_csv(csv_file)
+            
+            # Check if Context_Type and Enclosure_Type columns exist and have reasonable values
+            # If Context_Type contains values like "CE" or "& UKCA", it means the CSV was split incorrectly
+            if "Context_Type" in df.columns and not df.empty:
+                first_context = str(df.iloc[0]["Context_Type"]).strip()
+                # If Context_Type looks wrong (too short, doesn't contain voltage), try to fix it
+                if len(first_context) < 5 or ("CE" in first_context and "220V" not in first_context and "110V" not in first_context):
+                    # The CSV was likely split incorrectly - read it manually
+                    print(f"    WARNING: Detected CSV parsing issue, attempting to fix...")
+                    df = _read_csv_with_comma_handling(csv_file)
 
             if df.empty:
                 print(f"    WARNING: Empty file: {csv_file.name}")

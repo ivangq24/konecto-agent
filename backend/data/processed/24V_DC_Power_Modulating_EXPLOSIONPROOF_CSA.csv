@@ -1,0 +1,6 @@
+Context_Type,Enclosure_Type,Base_Part_Number,Modulating_Output_Torque_In-Lbs,Modulating_Output_Torque_Nm,Modulating_Duty_Cycle_S4_percent,Starts_per_Hour,Operating_Speed_Sec,Full_Load_Current_FLA_Amps,Locked_Rotor_Current_LRA_Amps,Motor_Power_Watts
+24V DC Power Modulating,EXPLOSIONPROOF - CSA,761X30-11370000/A,560,65,30,720,17,5.0,12.8,
+24V DC Power Modulating,EXPLOSIONPROOF - CSA,761Y30-11370000/A,630,72,30,720,20,6.3,12.8,
+24V DC Power Modulating,EXPLOSIONPROOF - CSA,762X30-11370000/A,1150,130,40,960,22,6.0,16.9,40
+24V DC Power Modulating,EXPLOSIONPROOF - CSA,762Y30-11370000/A,1270,145,40,960,22,7.4,16.9,40
+24V DC Power Modulating,EXPLOSIONPROOF - CSA,763X30-11370000/A,1900,220,35,840,32,8.9,30.8,40
